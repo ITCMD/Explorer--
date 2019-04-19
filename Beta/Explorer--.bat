@@ -127,7 +127,9 @@ if "%username%"=="Server" (
 		)
 	)
 :StartupMods
-for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\Startup\*.bat"') do (Call "%appdata%\Explorer--\Mods\Startup\%%~A") 
+if exist "%appdata%\Explorer--\Mods\Startup\*.bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\Startup\*.bat"') do (Call "%appdata%\Explorer--\Mods\Startup\%%~A") 
+)
 :display
 if "%username%"=="Server" (
 	if "%cd%"=="C:\Users\Server" (
@@ -220,8 +222,8 @@ if %errorlevel%==102 set /a Selected+=5
 if %errorlevel%==116 set /a Selected+=10
 if %errorlevel%==98 set /a Selected-=5
 set _Errorlevel=%errorlevel%
-if exist "%appdata%\Explorer--\Mods\CustomKeyBinds\*.CMD" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.CMD"') do (Call "%%~A" %_Errorlevel%)
+if exist "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat"') do (Call "%%~A" %_Errorlevel%)
 )
 goto display
 
@@ -349,8 +351,8 @@ if %errorlevel%==102 set /a Selected+=5
 if %errorlevel%==116 set /a Selected+=10
 if %errorlevel%==98 set /a Selected-=5
 set _Errorlevel=%errorlevel%
-if exist "%appdata%\Explorer--\Mods\CustomKeyBinds\*.CMD" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.CMD"') do (Call "%%~A" %_Errorlevel%)
+if exist "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.bat"') do (Call "%%~A" %_Errorlevel%)
 )
 goto LowPreformanceDisplay
 
@@ -365,27 +367,66 @@ exit /b
 
 :manualmods
 cls
-echo [4mMy Manual Plugins[0m
-echo.
-set num=0
-if not exist "%appdata%\Explorer--\Mods\ManualMods\*.CMD" (
-	echo No Plugins installed.
-	echo goto settings/plugins to install plugins.
-	pause
-	goto display
-)
-for /f "tokens=*" %%A in ('dir /b "%appdata%\Explorer--\Mods\ManualMods\*.CMD"') do (
-	set /a num+=1
-		for /f "usebackq skip=1 tokens=*" %%C in ("%%~A") do (
-			set modname=%%~C
-			set !modname:~4,20!
+echo [4mMy Manual Plugins[0m .
+for /f "tokens=*" %%A in ('dir /b /s "%appdata%\Explorer--\Mods\ManualMods\"') do (
+	set Mod!modnum!Path=%%~A
+	for /f "usebackq skip=1 tokens=*" %%C in ("%%~A") do (
+		echo %%C | find /i "REM ModName=" >nul
+		if !errorlevel!==0 (
+			echo !num!] !modname:~12,40!
+		) ELSE (
+			echo !num!] %%~nI  [90m[Invalid Plugin Data Found!][0m
 		)
-	echo !num!] !modname!
-	set Plugin!num!=%%~A
+	)
 )
-echo Enter Plugin to run
-set /p entry=">"
+echo.
+echo [92mEnter plugin to Run or -X to cancel. Enter -A to view all plugins[0m
+set /p manmod=">"
+if /i "%manmod%"=="-X" goto Display
+if /i "%manmod%"=="-A" goto AllModsManually
+cls
+if not exist "!Mod%delmod%Path!" (
+	echo plugin not found.
+	pause
+	goto Display
+)
+call "!Mod%delmod%Path!"
+echo.
+echo [92mPlugin called.[0m
+pause
+goto display
 
+
+:AllModsManually
+cls
+echo [4mAll Plugins[0m .
+for /f "tokens=*" %%A in ('dir /b /s "%appdata%\Explorer--\Mods\"') do (
+	set Mod!modnum!Path=%%~A
+	for /f "usebackq skip=1 tokens=*" %%C in ("%%~A") do (
+		echo %%C | find /i "REM ModName=" >nul
+		if !errorlevel!==0 (
+			echo !num!] !modname:~12,40!
+		) ELSE (
+			echo !num!] %%~nI  [90m[Invalid Plugin Data Found!][0m
+		)
+	)
+)
+echo.
+echo [92mEnter plugin to Run or -X to cancel. Enter -M to view only manual plugins[0m
+set /p manmod=">"
+if /i "%manmod%"=="-X" goto Display
+if /i "%manmod%"=="-A" goto manualmods
+cls
+if not exist "!Mod%delmod%Path!" (
+	echo plugin not found.
+	pause
+	goto Display
+)
+call "!Mod%delmod%Path!"
+echo.
+echo [92mPlugin called.[0m
+pause
+goto display
 
 
 :search
@@ -399,7 +440,7 @@ if /i "%search%"=="-X" goto display
 if /i "%search%"=="-A" goto advancedsearch
 set searchnum=0
 echo ========================[[92mResults[0m]=====================================
-for /f "tokens=*" %%A ('dir /b /s "%cd%\*%search%*"') do (
+for /f "tokens=*" %%A in ('dir /b /s "%cd%\*%search%*"') do (
 	set /a searchnum+=1
 	echo !searchnum!] %%~A
 	set SearchResult!searchnum!=%%~A
@@ -407,21 +448,21 @@ for /f "tokens=*" %%A ('dir /b /s "%cd%\*%search%*"') do (
 echo ====================================================================
 echo Enter number item to select or -X to cancel.
 set /p _choice=">"
-if "%choice%"=="-X" goto display
-if "!SearchResult%choice%!"=="" (
-	echo Option not found.
+if "%_choice%"=="-X" goto display
+if "!SearchResult%_choice%!"=="" (
+	echo Search Result not found.
 	pause
 	goto handleresult
 )
-if not exist "!SearchResult%choice%!" (
+if not exist "!SearchResult%_choice%!" (
 	echo We couldn't find the file [90m!SearchResult%choice%![0m
 	echo Something must have gone wrong on our end with the search. Try updating?
 	echo Sorry. At least you get to see this emoji of a guy
-	echo waving that I made:  [90mo/[0m.
+	echo waving that I made:  [90mo/[0m
 	pause
 	goto search
 )
-call :handleparam "!SearchResult%choice%!"
+call :handleparam "!SearchResult%_choice%!"
 echo Crap. You weren't supposed to see this.
 echo *Hides doll collection*
 echo.
@@ -702,23 +743,37 @@ goto mods
 :remmod
 cls
 set modnum=0
-echo Gathering plugins and plugin data . . .
+echo [92mList of Plugins (by name)[0m
 for /f "tokens=*" %%A in ('dir /b /s "%appdata%\Explorer--\Mods\"') do (
-	set Mod!modnum!Path=%%~A
-	for /f "usebackq skip=1 tokens=*" %%C in ("%%~A") do (
-		echo %%C | find /i "REM ModName=" >nul
-		if !errorlevel!==0 (
-			echo !num!] !modname:~12,40!
-		) ELSE (
-			echo !num!] %%~nI  [90m[Invalid Plugin Data Found!][0m
+	if not exist "%%~A"\* (
+		set /a modnum+=1
+		set Mod!modnum!Path=%%~A
+		set tempnum=0
+		for /f "usebackq skip=1 tokens=*" %%C in ("%%~A") do (
+			set /a tempnum+=1
+			set modname=%%C
+			echo %%C | find /i "REM ModName=" >nul
+			if !errorlevel!==0 (
+				set modname=%%~C
+			)
+				if "!tempnum!"=="1" echo !modnum!] !modname:~12,40!
+
 		)
 	)
 )
 echo.
 echo [92mEnter plugin to delete or -X to cancel[0m
 set /p delmod=">"
-
-
+if /i "%delmod%"=="-X" goto mods
+if not exist "!Mod%delmod%Path!" (
+	echo plugin not found.
+	pause
+	goto remmod
+)
+del /p "!Mod%delmod%Path!"
+echo [92mPlugin Uninstalled.[0m
+pause
+goto mods
 
 
 
