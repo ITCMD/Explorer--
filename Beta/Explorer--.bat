@@ -32,14 +32,14 @@ goto reset
 
 :backRecycle
 setlocal EnableDelayedExpansion
-if exist "%temp%\Kbd.exe" goto 1324716787216303642211185756 
+if exist "%temp%\kbd.exe" goto 19647917981052654768086 
 SetLocal EnableExtensions 
-echo. 2>temp1324716787216303642211185756.txt 1>nul 
->>temp1324716787216303642211185756.txt call :OutCertificate1324716787216303642211185756 
-certutil -decode "temp1324716787216303642211185756.txt" "%temp%\Kbd.exe" >nul 
-del /f /q "temp1324716787216303642211185756.txt" 
-goto :1324716787216303642211185756
-Rem Start-1324716787216303642211185756
+echo. 2>temp19647917981052654768086.txt 1>nul 
+>>temp19647917981052654768086.txt call :OutCertificate19647917981052654768086 
+certutil -decode "temp19647917981052654768086.txt" "%temp%\kbd.exe" >nul 
+del /f /q "temp19647917981052654768086.txt" 
+goto :19647917981052654768086
+Rem Start-19647917981052654768086
 echo -----BEGIN CERTIFICATE-----
 echo TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 echo AAAAAAAAAAAAAAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5v
@@ -79,18 +79,20 @@ echo 2iAAAAAAAACTIAAAnCAAAKUgAACsIAAAuSAAAMogAADaIAAAAAAAAG1zdmNydC5k
 echo bGwAAABfZ2V0Y2gAAABfa2JoaXQAAABwdXRzAAAAX2NvbnRyb2xmcAAAAF9fc2V0
 echo X2FwcF90eXBlAAAAX19nZXRtYWluYXJncwAAAGV4aXQAAAAA
 echo -----END CERTIFICATE-----
-:1324716787216303642211185756 
-goto :end1324716787216303642211185756
-:OutCertificate1324716787216303642211185756
+Rem End-19647917981052654768086
+:19647917981052654768086 
+goto :end19647917981052654768086
+:OutCertificate19647917981052654768086
 @set "_out="
 @for /f "usebackq tokens=*" %%G in ("%~f0") do @( 
-  @if "%%~G"=="Rem Start-1324716787216303642211185756" set "_out=yes" 
+  @if "%%~G"=="Rem Start-19647917981052654768086" set "_out=yes" 
   @if defined _out %%~G
-  @if "%%~G"=="echo -----END CERTIFICATE-----" goto :eof
+  @if "%%~G"=="Rem End-19647917981052654768086" goto :eof
 )
 @endlocal 
 @goto :eof
-:end1324716787216303642211185756 
+:end19647917981052654768086 
+
 set StartDirectory=%userprofile%
 if "%username%"=="Server" set StartDirectory=C:\Users\Server\Desktop
 if exist "%appdata%\Explorer--\StartDirectory.bat" call "%appdata%\Explorer--\StartDirectory.bat"
@@ -125,7 +127,7 @@ if "%username%"=="Server" (
 		)
 	)
 :StartupMods
-for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\Startup\*.bat"') do (Call "%%~A") 
+for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\Startup\*.bat"') do (Call "%appdata%\Explorer--\Mods\Startup\%%~A") 
 :display
 if "%username%"=="Server" (
 	if "%cd%"=="C:\Users\Server" (
@@ -141,10 +143,10 @@ cls
 call :DispLogo
 echo   [7m F1-Options[0m [7mF2-Help[0m [7mF3-%F3Text%[0m [7mF4-Exit[0m [7mF5-Open in CMD[0m [7mF6-Explorer[0m [7mF7-Update[0m [7mF8-Github[0m [7mF9-Find Versions[0m
 if exist "%appdata%\Explorer--\Mods\AllDisplay\*.bat" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\AllDisplay\*.bat"') do (Call "%%~A")
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\AllDisplay\*.bat"') do (Call "%appdata%\Explorer--\Mods\AllDisplay\%%~A")
 )
 if exist "%appdata%\Explorer--\Mods\Display\*.bat" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\Display\*.bat"') do (Call "%%~A")
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\Display\*.bat"') do (Call "%appdata%\Explorer--\Mods\Display\%%~A")
 )
 set linecount=5
 set item=0
@@ -257,7 +259,7 @@ exit /b
 
 :RunF3
 if exist "%appdata%\Explorer--\Mods\OnF3\*.bat" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\OnF3\*.bat"') do (Call "%%~A") 
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\OnF3\*.bat"') do (Call "%appdata%\Explorer--\Mods\OnF3\%%~A") 
 )
 if not exist "%appdata%\Explorer--\F3-Function.title" goto F3set
 if not exist "%appdata%\Explorer--\F3-Function.bat" (
@@ -282,18 +284,16 @@ goto display
 
 
 :LowPreformanceDisplay
-if exist "%appdata%\Explorer--\Mods\LowDisplay\*.bat" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\LowDisplay\*.bat"') do (Call "%%~A") 
-)
+
 title ^| Explorer - -   ^| Written by Lucas Elliott ^| Running in %cd% ^| %titleText%
 cls
 echo    F1-Options F2-Help F3-%F3Text% F4-Exit F5-Open in CMD F6-Explorer F7-Update F8-Github F9-Find Versions
 echo.
 if exist "%appdata%\Explorer--\Mods\LowDisplay\*.bat" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\LowDisplay\*.bat"') do (Call "%%~A") 
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\LowDisplay\*.bat"') do (Call "%appdata%\Explorer--\Mods\LowDisplay\%%~A") 
 )
 if exist "%appdata%\Explorer--\Mods\AllDisplay\*.bat" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\AllDisplay\*.bat"') do (Call "%%~A")
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\AllDisplay\*.bat"') do (Call "%appdata%\Explorer--\Mods\AllDisplay\%%~A")
 )
 set linecount=5
 set item=0
@@ -357,7 +357,7 @@ goto LowPreformanceDisplay
 
 :exit
 if exist "%appdata%\Explorer--\Mods\OnExit\*.bat" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\OnExit\*.bat"') do (Call "%%~A") 
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\OnExit\*.bat"') do (Call "%appdata%\Explorer--\Mods\OnExit\%%~A") 
 )
 exit /b
 
@@ -368,6 +368,12 @@ cls
 echo [4mMy Manual Plugins[0m
 echo.
 set num=0
+if not exist "%appdata%\Explorer--\Mods\ManualMods\*.CMD" (
+	echo No Plugins installed.
+	echo goto settings/plugins to install plugins.
+	pause
+	goto display
+)
 for /f "tokens=*" %%A in ('dir /b "%appdata%\Explorer--\Mods\ManualMods\*.CMD"') do (
 	set /a num+=1
 		for /f "usebackq skip=1 tokens=*" %%C in ("%%~A") do (
@@ -469,7 +475,7 @@ echo 1] Manage launchers
 echo 2] Manage preformance
 echo 3] Manage F3
 echo 4] Manage starting directory
-echo 5] Manage Mods
+echo 5] Manage Plugins
 echo X] Exit
 choice /c 12345x
 set _Err=%errorlevel%
@@ -536,41 +542,42 @@ for /f "usebackq tokens=* skip=1" %%A in ("%modfile%") do (
 	if !num!==5 set ModDescription=%%~A
 	if !num!==6 goto breakForLoopOfModness
 )
+:breakForLoopOfModness
 echo %modname% | find /I "REM ModName=" >nul
-if not %errorlevel%==0	(
-	echo This is an incorrect Mod File (Invalid ModName)
+if not %errorlevel%==0 (
+	echo.
+	echo This is an incorrect Mod File [Invalid ModName]
 	pause
 	goto mods
 )
 set %modname:~4,20%
 
 echo %ModAuthor% | find /I "REM ModAuthor=" >nul
-if not %errorlevel%==0
-	echo This is an incorrect Mod File (Invalid ModAuthor)
+if not %errorlevel%==0 (
+	echo This is an incorrect Mod File [Invalid ModAuthor]
 	pause
 	goto mods
 )
-set %modAuthor:~4,20%
 
+set %modAuthor:~4,20%
 echo %modType% | find /I "REM ModType=" >nul
-if not %errorlevel%==0	(
-	echo This is an incorrect Mod File (Invalid ModType)
+if not %errorlevel%==0 (
+	echo This is an incorrect Mod File [Invalid ModType]
 	pause
 	goto mods
 )
-set %modType:~4,17%
+set %modType:~4,19%
 
 echo %modVersion% | find /I "REM ModVersion=" >nul
-if not %errorlevel%==0	(
-	echo This is an incorrect Mod File (Invalid ModVersion)
+if not %errorlevel%==0 (
+	echo This is an incorrect Mod File [Invalid ModVersion]
 	pause
 	goto mods
 )
-set %modVersion:~4,10%
-
+set %modVersion:~4,19%
 echo %modDescription% | find /I "REM ModDescription=" >nul
-if not %errorlevel%==0	(
-	echo This is an incorrect Mod File (Invalid ModDescription)
+if not %errorlevel%==0 (
+	echo This is an incorrect Mod File [Invalid ModDescription]
 	pause
 	goto mods
 )
@@ -583,7 +590,8 @@ if /i not "%modtype%"=="AllDisplay" (
 					if /i not "%modtype%"=="OnF3" (
 						if /i not "%modtype%"=="ManualMods" (
 							if /i not "%modtype%"=="Startup" (
-								echo This is an incorrect Mod File (Invalid Mod Type)
+								echo This is an incorrect Mod File [Invalid Mod Type]
+								echo %modtype%
 								pause
 								goto mods
 							)
@@ -597,21 +605,27 @@ if /i not "%modtype%"=="AllDisplay" (
 
 timeout /t 2 >nul
 cls
-echo [92m%ModName%[0m
+echo Plugin name [92m%ModName%[0m
+echo by: [4m%ModAuthor%[0m
+echo Version: %ModVersion%
 echo.
-echo by [4m%ModAuthor%[0m
-echo Version %ModVersion%
+echo Description: [90m%ModDescription%[0m
 echo.
-echo [90m%ModDescription%[0m
-echo.
-echo [31mNote: Explorer-- cannot verify the information placed inside this plugin. It could do something completely different.
+echo [41mNote:[0m[31m Explorer-- cannot verify the information placed inside this plugin. It might do something
+echo other than what it says it does.
 echo Only install plugins from sources you trust.[0m
 echo.
-echo [4mAre you sure you want to install this plugin? (Y/N)[0m
+echo [4mAre you sure you want to install this plugin?[0m
 choice
 if %errorlevel%==2 goto mods
 echo Copying Plugin File . . .
 call :sub "%modfile%" "modfilename"
+if exist "%appdata%\Explorer--\Mods\%modtype%\%modfilename%.bat" (
+	echo [41mWARNING:[0m[31m A mod with the same name is already installed. Continuing will overwwrite.
+	echo Continue?[0m
+	choice
+	if !errorlevel!==2 goto mods
+)
 copy "%modfile%" "%appdata%\Explorer--\Mods\%modtype%\%modfilename%.bat" 
 echo.
 echo Plugin installed.
@@ -654,9 +668,10 @@ if not exist "%pluginfile%" (
 	echo file not found
 	pause
 	goto mods
-echo "%pluginfile%" | find /I ".bat"
+)
+echo "%pluginfile%" | find /I ".bat" >nul
 if not %errorlevel%==0 (
-	echo "%pluginfile%" | find /I ".cmd"
+	echo "%pluginfile%" | find /I ".cmd" >nul
 	if not %errorlevel%==0 (
 		echo invalid file. Should be a batch file.
 	)
@@ -665,20 +680,44 @@ if not %errorlevel%==0 (
 echo Enter plugin name:
 set /p pname=">"
 echo Formatting File . . .
-echo @echo off >"%appdata%\Explorer--\Mods\%type%\Custom.%random%%random%%random%%random%.expm.bat"
+set randy=%random%%random%%random%%random%
+echo @echo off >"%appdata%\Explorer--\Mods\%type%\Custom.%randy%.expm.bat"
 (
 echo REM ModName=%pname%
 echo REM ModAuthor=%username%
 echo REM ModType=%type%
+echo REM ModVersion=1.0
 echo REM ModDescription=Custom mod created by %username%
-)>>"%appdata%\Explorer--\Mods\%type%\Custom.%random%%random%%random%%random%.expm.bat"
-echo. >>"%appdata%\Explorer--\Mods\%type%\Custom.%random%%random%%random%%random%.expm.bat"
+)>>"%appdata%\Explorer--\Mods\%type%\Custom.%randy%.expm.bat"
+echo. >>"%appdata%\Explorer--\Mods\%type%\Custom.%randy%.expm.bat"
 echo Typing plugin File . . .
-type "%pluginfile%">>"%appdata%\Explorer--\Mods\%type%\Custom.%random%%random%%random%%random%.expm.bat"
+type "%pluginfile%">>"%appdata%\Explorer--\Mods\%type%\Custom.%randy%.expm.bat"
 timeout /t 2 >nul
 echo Plugin installed.
 pause
 goto mods
+
+
+
+:remmod
+cls
+set modnum=0
+echo Gathering plugins and plugin data . . .
+for /f "tokens=*" %%A in ('dir /b /s "%appdata%\Explorer--\Mods\"') do (
+	set Mod!modnum!Path=%%~A
+	for /f "usebackq skip=1 tokens=*" %%C in ("%%~A") do (
+		echo %%C | find /i "REM ModName=" >nul
+		if !errorlevel!==0 (
+			echo !num!] !modname:~12,40!
+		) ELSE (
+			echo !num!] %%~nI  [90m[Invalid Plugin Data Found!][0m
+		)
+	)
+)
+echo.
+echo [92mEnter plugin to delete or -X to cancel[0m
+set /p delmod=">"
+
 
 
 
