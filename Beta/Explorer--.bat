@@ -550,7 +550,7 @@ if not %errorlevel%==0 (
 	pause
 	goto mods
 )
-set %modname:~4,20%
+set %modname:~4,40%
 
 echo %ModAuthor% | find /I "REM ModAuthor=" >nul
 if not %errorlevel%==0 (
@@ -559,14 +559,14 @@ if not %errorlevel%==0 (
 	goto mods
 )
 
-set %modAuthor:~4,20%
+set %modAuthor:~4,40%
 echo %modType% | find /I "REM ModType=" >nul
 if not %errorlevel%==0 (
 	echo This is an incorrect Mod File [Invalid ModType]
 	pause
 	goto mods
 )
-set %modType:~4,19%
+set %modType:~4,25%
 
 echo %modVersion% | find /I "REM ModVersion=" >nul
 if not %errorlevel%==0 (
@@ -574,14 +574,14 @@ if not %errorlevel%==0 (
 	pause
 	goto mods
 )
-set %modVersion:~4,19%
+set %modVersion:~4,25%
 echo %modDescription% | find /I "REM ModDescription=" >nul
 if not %errorlevel%==0 (
 	echo This is an incorrect Mod File [Invalid ModDescription]
 	pause
 	goto mods
 )
-set %modDescription:~4,400%
+set %modDescription:~4,415%
 if /i not "%modtype%"=="AllDisplay" (
 	if /i not "%modtype%"=="CustomKeyBinds" (
 		if /i not "%modtype%"=="Display" (

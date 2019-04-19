@@ -1,0 +1,7 @@
+@echo off 
+REM ModName=Example
+REM ModAuthor=SetLucas
+REM ModType=AllDisplay
+REM ModVersion=2.2
+REM ModDescription=Tests plugin service by saying Hello on display.
+echo [92mHELLOOOO I'm a plugin[0m
