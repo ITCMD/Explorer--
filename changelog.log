@@ -1,5 +1,13 @@
-1] Updated Help files
-   - Self explanitory right?
-2] Fixed "Other Version Finder"
-   - There was a problem with backslashes.
-   - It's fixed now. Sorry 'bout dat.
+1] Added Plugin Support!
+ - Wohoo Plugin support is here!
+ - Developers can add their own scripts to different sections of the explorer.
+ - A plugin creation guide will be released soon
+ - There are a couple of official plugins you can see in the repository,
+ - To view the repository, press F8 on the main menu
+2] Added search tool
+ - Press S to search local directory,
+ - Enter -A to view advanced search.
+3] Fixed a lot of bugs
+ - There are more and more every day
+ - Made the info page not run random stuff from the file it's viewing. LOL.
+ - Added some secret emojicons into the script somewhere.

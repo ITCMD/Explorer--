@@ -2,7 +2,7 @@
 if "%~1"=="updated" goto cleanupdate
 if "%~1"=="update" goto updator
 :reset
-set Vers=1.8
+set Vers=1.9
 cls
 echo (C) 2019 Created by Lucas Elliott with ITCMD
 echo           [90mRunning Version %vers%[0m
@@ -195,36 +195,39 @@ for /f "tokens=*" %%A in ('dir /b /a') do (
 :BreakLoop
 set MultiPage=False
 "%temp%\Kbd.exe"
-if %errorlevel%==80 set /a Selected+=1
-if %errorlevel%==72 set /a Selected-=1
-if %errorlevel%==77 goto launch
-if %errorlevel%==75 cd .. & set Selected=1
-if %errorlevel%==13 goto run
-if %errorlevel%==105 goto info
-if %errorlevel%==101 notepad %_SelectedFile%
-if %errorlevel%==83 goto delete
-if %errorlevel%==59 goto options
-if %errorlevel%==60 goto help
-if %errorlevel%==61 goto RunF3
-if %errorlevel%==62 goto exit
-if %errorlevel%==63 start
-if %errorlevel%==99 set CopiedFile=%cd%\%_SelectedFile%& set titleText=Copied File
-if %errorlevel%==118 call :paste "%CopiedFile%"
-if %errorlevel%==64 Explorer %cd%
-if %errorlevel%==65 goto updator
-if %errorlevel%==66 start www.github.com/ITCMD/Explorer--
-if %errorlevel%==67 goto OtherVersions
-if %errorlevel%==103 goto go
-if %errorlevel%==109 goto manualmods
-if %errorlevel%==114 goto rename
-if %errorlevel%==115 goto search
-if %errorlevel%==102 set /a Selected+=5
-if %errorlevel%==116 set /a Selected+=10
-if %errorlevel%==98 set /a Selected-=5
-set _Errorlevel=%errorlevel%
+set _errorlevel=%errorlevel%
+if %_errorlevel%==59 goto options
 if exist "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat"') do (Call "%%~A" %_Errorlevel%)
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat"') do (
+		Call "%appdata%\Explorer--\Mods\CustomKeyBinds\%%~A" %_errorlevel%
+		if !errorlevel!==45 goto Display
+	)
 )
+if %_errorlevel%==80 set /a Selected+=1
+if %_errorlevel%==72 set /a Selected-=1
+if %_errorlevel%==77 goto launch
+if %_errorlevel%==75 cd .. & set Selected=1
+if %_errorlevel%==13 goto run
+if %_errorlevel%==105 goto info
+if %_errorlevel%==101 notepad %_SelectedFile%
+if %_errorlevel%==83 goto delete
+if %_errorlevel%==60 goto help
+if %_errorlevel%==61 goto RunF3
+if %_errorlevel%==62 goto exit
+if %_errorlevel%==63 start
+if %_errorlevel%==99 set CopiedFile=%cd%\%_SelectedFile%& set titleText=Copied File
+if %_errorlevel%==118 call :paste "%CopiedFile%"
+if %_errorlevel%==64 Explorer %cd%
+if %_errorlevel%==65 goto updator
+if %_errorlevel%==66 start www.github.com/ITCMD/Explorer--
+if %_errorlevel%==67 goto OtherVersions
+if %_errorlevel%==103 goto go
+if %_errorlevel%==109 goto manualmods
+if %_errorlevel%==114 goto rename
+if %_errorlevel%==115 goto search
+if %_errorlevel%==102 set /a Selected+=5
+if %_errorlevel%==116 set /a Selected+=10
+if %_errorlevel%==98 set /a Selected-=5
 goto display
 
 
@@ -325,17 +328,25 @@ for /f "tokens=*" %%A in ('dir /b') do (
 )
 :2BreakLoop2
 "%temp%\Kbd.exe"
-if %errorlevel%==80 set /a Selected+=1
-if %errorlevel%==72 set /a Selected-=1
-if %errorlevel%==77 goto launch
-if %errorlevel%==75 cd .. & set Selected=1
-if %errorlevel%==13 goto run
-if %errorlevel%==105 goto info
-if %errorlevel%==101 notepad %_SelectedFile%
-if %errorlevel%==83 goto delete
-if %errorlevel%==59 goto options
-if %errorlevel%==60 goto help
-if %errorlevel%==61 goto RunF3
+set _errorlevel=%errorlevel%
+if %_errorlevel%==59 goto options
+if exist "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat"') do (
+		Call "%appdata%\Explorer--\Mods\CustomKeyBinds\%%~A" %_errorlevel%
+		if !errorlevel!==45 goto LowPreformanceDisplay
+	)
+)
+if %_errorlevel%==80 set /a Selected+=1
+if %_errorlevel%==72 set /a Selected-=1
+if %_errorlevel%==77 goto launch
+if %_errorlevel%==75 cd .. & set Selected=1
+if %_errorlevel%==13 goto run
+if %_errorlevel%==105 goto info
+if %_errorlevel%==101 notepad %_SelectedFile%
+if %_errorlevel%==83 goto delete
+if %_errorlevel%==59 goto options
+if %_errorlevel%==60 goto help
+if %_errorlevel%==61 goto RunF3
 if %errorlevel%==62 goto exit
 if %errorlevel%==63 start
 if %errorlevel%==99 set CopiedFile=%cd%\%_SelectedFile%& set titleText=Copied File
@@ -479,7 +490,65 @@ echo 4] SEARCH ENTIRE PC  [90mHeck Yeah![0m
 echo X] Cancel
 choice /c 1234x /n
 if %errorlevel%==5 goto display
+if %errorlevel%==4 set search=C:
+if %errorlevel%==3 set /p search="Enter Path >"
+if %errorlevel%==2 set search=%userprofile%
+if %errorlevel%==1 set search=%cd%
+echo Enter Search:
+echo [90m* is a wildcard. Your search is surrounded by them by default. To change this add }
+echo to the begining of your search. Here are some more examples:
+echo Hello would search for all files with the word hello in it.
+echo }Hello would search for a file with the name "Hello.txt" matching exactly.
+echo Hello*.txt would search for all text files with the word hello in it.[0m
+set /p searchn=">"
+set search=%search:"=%
+if "%searchn%"=="%searchn:}=%" (
+	set searchn=*%searchn%*
+) ELSE (
+	set searchn=%searchn:}=%
+)
+echo Include subfolders?
+choice
+if %errorlevel%==1 set _slashS=/S
+set searchnum=0
+title Explorer-- ^| Searching . . . Stand by . . .
+echo ========================[[92mResults[0m]=====================================
+for /f "tokens=*" %%A in ('dir /b %_SlashS% "%search%\%searchn%"') do (
+	set /a searchnum+=1
+	echo !searchnum!] %%~A
+	set SearchResult!searchnum!=%%~A
+)
+title Explorer-- ^| Search Results for [%search%\%searchn%]
+echo ====================================================================
+echo Enter number item to select or -X to cancel.
+set /p _choice=">"
+if "%_choice%"=="-X" goto display
+if "!SearchResult%_choice%!"=="" (
+	echo Search Result not found.
+	pause
+	goto handleresult
+)
+if not exist "!SearchResult%_choice%!" (
+	echo We couldn't find the file [90m!SearchResult%choice%![0m
+	echo Something must have gone wrong on our end with the search. Try updating?
+	echo Sorry. At least you get to see this emoji of a guy
+	echo waving that I made:  [90mo/[0m
+	pause
+	goto search
+)
+call :handleparam "!SearchResult%_choice%!"
+echo Crap. You weren't supposed to see this.
+echo *Hides doll collection*
+echo.
+echo This was an error. Uh... Try updating?
 pause
+exit /b
+
+
+
+
+
+
 exit /b
 
 :updator
@@ -517,8 +586,9 @@ echo 2] Manage preformance
 echo 3] Manage F3
 echo 4] Manage starting directory
 echo 5] Manage Plugins
+echo 6] Report a bug, typo or other error
 echo X] Exit
-choice /c 12345x
+choice /c 123456x
 set _Err=%errorlevel%
 color 07  
 if %_Err%==1 goto launcherset
@@ -526,7 +596,10 @@ if %_Err%==2 goto preformancesetting
 if %_Err%==3 goto F3Set
 if %_Err%==4 goto startingdir
 if %_Err%==5 goto mods
+if %_Err%==6 start https://github.com/ITCMD/Explorer--/issues
 goto display
+
+
 
 
 :Mods
@@ -749,14 +822,11 @@ for /f "tokens=*" %%A in ('dir /b /s "%appdata%\Explorer--\Mods\"') do (
 		set /a modnum+=1
 		set Mod!modnum!Path=%%~A
 		set tempnum=0
-		for /f "usebackq skip=1 tokens=*" %%C in ("%%~A") do (
-			set /a tempnum+=1
-			set modname=%%C
-			echo %%C | find /i "REM ModName=" >nul
-			if !errorlevel!==0 (
-				set modname=%%~C
-			)
-				if "!tempnum!"=="1" echo !modnum!] !modname:~12,40!
+		for /f "skip=1 tokens=*" %%C in ('find /i "REM ModName=" "%%~A"') do (
+			set modname=%%~C
+			set tempnum=1
+		)
+			if "!tempnum!"=="1" echo !modnum!] !modname:~12,40!
 
 		)
 	)
@@ -5242,3 +5312,6 @@ echo -----END CERTIFICATE-----
 certutil -decode "temp.txt" "%appdata%\Explorer--\winhttpjs.bat" >nul 
 del /f /q "temp.txt" 
 exit /b
+
+
+

@@ -2,7 +2,7 @@
 if "%~1"=="updated" goto cleanupdate
 if "%~1"=="update" goto updator
 :reset
-set Vers=1.8
+set Vers=1.9
 cls
 echo (C) 2019 Created by Lucas Elliott with ITCMD
 echo           [90mRunning Version %vers%[0m
@@ -32,14 +32,14 @@ goto reset
 
 :backRecycle
 setlocal EnableDelayedExpansion
-if exist "%temp%\Kbd.exe" goto 1324716787216303642211185756 
+if exist "%temp%\kbd.exe" goto 19647917981052654768086 
 SetLocal EnableExtensions 
-echo. 2>temp1324716787216303642211185756.txt 1>nul 
->>temp1324716787216303642211185756.txt call :OutCertificate1324716787216303642211185756 
-certutil -decode "temp1324716787216303642211185756.txt" "%temp%\Kbd.exe" >nul 
-del /f /q "temp1324716787216303642211185756.txt" 
-goto :1324716787216303642211185756
-Rem Start-1324716787216303642211185756
+echo. 2>temp19647917981052654768086.txt 1>nul 
+>>temp19647917981052654768086.txt call :OutCertificate19647917981052654768086 
+certutil -decode "temp19647917981052654768086.txt" "%temp%\kbd.exe" >nul 
+del /f /q "temp19647917981052654768086.txt" 
+goto :19647917981052654768086
+Rem Start-19647917981052654768086
 echo -----BEGIN CERTIFICATE-----
 echo TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 echo AAAAAAAAAAAAAAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5v
@@ -79,18 +79,22 @@ echo 2iAAAAAAAACTIAAAnCAAAKUgAACsIAAAuSAAAMogAADaIAAAAAAAAG1zdmNydC5k
 echo bGwAAABfZ2V0Y2gAAABfa2JoaXQAAABwdXRzAAAAX2NvbnRyb2xmcAAAAF9fc2V0
 echo X2FwcF90eXBlAAAAX19nZXRtYWluYXJncwAAAGV4aXQAAAAA
 echo -----END CERTIFICATE-----
-:1324716787216303642211185756 
-goto :end1324716787216303642211185756
-:OutCertificate1324716787216303642211185756
+Rem End-19647917981052654768086
+:19647917981052654768086 
+goto :end19647917981052654768086
+:OutCertificate19647917981052654768086
 @set "_out="
 @for /f "usebackq tokens=*" %%G in ("%~f0") do @( 
-  @if "%%~G"=="Rem Start-1324716787216303642211185756" set "_out=yes" 
+  @if "%%~G"=="Rem Start-19647917981052654768086" set "_out=yes" 
   @if defined _out %%~G
-  @if "%%~G"=="echo -----END CERTIFICATE-----" goto :eof
+  @if "%%~G"=="Rem End-19647917981052654768086" goto :eof
 )
 @endlocal 
 @goto :eof
-:end1324716787216303642211185756 
+:end19647917981052654768086 
+
+set StartDirectory=%userprofile%
+if "%username%"=="Server" set StartDirectory=C:\Users\Server\Desktop
 if exist "%appdata%\Explorer--\StartDirectory.bat" call "%appdata%\Explorer--\StartDirectory.bat"
 cd %StartDirectory%
 mode con lines=45 cols=116
@@ -99,8 +103,14 @@ set lines=44
 set SelectedLine=40
 if not exist "%appdata%\Explorer--\" md "%appdata%\Explorer--\"
 if not exist "%appdata%\Explorer--\Launchers\" md "%appdata%\Explorer--\Launchers"
-set StartDirectory=%userprofile%
-
+if not exist "%appdata%\Explorer--\Mods\Startup" md "%appdata%\Explorer--\Mods\Startup"
+if not exist "%appdata%\Explorer--\Mods\Display" md "%appdata%\Explorer--\Mods\Display"
+if not exist "%appdata%\Explorer--\Mods\LowDisplay" md "%appdata%\Explorer--\Mods\LowDisplay"
+if not exist "%appdata%\Explorer--\Mods\AllDisplay" md "%appdata%\Explorer--\Mods\AllDisplay"
+if not exist "%appdata%\Explorer--\Mods\OnExit" md "%appdata%\Explorer--\Mods\OnExit"
+if not exist "%appdata%\Explorer--\Mods\OnF3" md "%appdata%\Explorer--\Mods\OnF3"
+if not exist "%appdata%\Explorer--\Mods\CustomKeyBinds\" md "%appdata%\Explorer--\Mods\CustomKeyBinds\"
+if not exist "%appdata%\Explorer--\Mods\manualmods\" md "%appdata%\Explorer--\Mods\ManualMods\"
 set Selected=1
 set tab=1
 set totaltab=1
@@ -111,7 +121,22 @@ if exist "%appdata%\Explorer--\F3-Function.title" (
 )
 if not "%~1"=="" goto handleparam
 :backhandleparam
+if "%username%"=="Server" (
+	if "%cd%"=="C:\Users\Server" (
+		cd ..
+		)
+	)
+:StartupMods
+if exist "%appdata%\Explorer--\Mods\Startup\*.bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\Startup\*.bat"') do (Call "%appdata%\Explorer--\Mods\Startup\%%~A") 
+)
 :display
+if "%username%"=="Server" (
+	if "%cd%"=="C:\Users\Server" (
+		cd ..
+		)
+	)
+
 title ^| Explorer - -   %titleText%
 if exist "%appdata%\Explorer--\LowPreformance" goto LowPreformanceDisplay
 set cds=                                                     %cd%    
@@ -119,6 +144,12 @@ set cds=%cds:~-53%
 cls
 call :DispLogo
 echo   [7m F1-Options[0m [7mF2-Help[0m [7mF3-%F3Text%[0m [7mF4-Exit[0m [7mF5-Open in CMD[0m [7mF6-Explorer[0m [7mF7-Update[0m [7mF8-Github[0m [7mF9-Find Versions[0m
+if exist "%appdata%\Explorer--\Mods\AllDisplay\*.bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\AllDisplay\*.bat"') do (Call "%appdata%\Explorer--\Mods\AllDisplay\%%~A")
+)
+if exist "%appdata%\Explorer--\Mods\Display\*.bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\Display\*.bat"') do (Call "%appdata%\Explorer--\Mods\Display\%%~A")
+)
 set linecount=5
 set item=0
 set _skip=0
@@ -164,31 +195,50 @@ for /f "tokens=*" %%A in ('dir /b /a') do (
 :BreakLoop
 set MultiPage=False
 "%temp%\Kbd.exe"
-if %errorlevel%==80 set /a Selected+=1
-if %errorlevel%==72 set /a Selected-=1
-if %errorlevel%==77 goto launch
-if %errorlevel%==75 cd .. & set Selected=1
-if %errorlevel%==13 goto run
-if %errorlevel%==105 goto info
-if %errorlevel%==101 notepad %_SelectedFile%
-if %errorlevel%==83 goto delete
-if %errorlevel%==59 goto options
-if %errorlevel%==60 goto help
-if %errorlevel%==61 goto RunF3
-if %errorlevel%==62 exit /b
-if %errorlevel%==63 start
-if %errorlevel%==99 set CopiedFile=%cd%\%_SelectedFile%& set titleText=Copied File
-if %errorlevel%==118 call :paste "%CopiedFile%"
-if %errorlevel%==64 Explorer %cd%
-if %errorlevel%==65 goto updator
-if %errorlevel%==66 start www.github.com/ITCMD/Explorer--
-if %errorlevel%==67 goto OtherVersions
-if %errorlevel%==103 goto go
-if %errorlevel%==102 set /a Selected+=5
-if %errorlevel%==116 set /a Selected+=10
-if %errorlevel%==98 set /a Selected-=5
-
+set _errorlevel=%errorlevel%
+if %_errorlevel%==59 goto options
+if exist "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat"') do (
+		Call "%appdata%\Explorer--\Mods\CustomKeyBinds\%%~A" %_errorlevel%
+		if !errorlevel!==45 goto Display
+	)
+)
+if %_errorlevel%==80 set /a Selected+=1
+if %_errorlevel%==72 set /a Selected-=1
+if %_errorlevel%==77 goto launch
+if %_errorlevel%==75 cd .. & set Selected=1
+if %_errorlevel%==13 goto run
+if %_errorlevel%==105 goto info
+if %_errorlevel%==101 notepad %_SelectedFile%
+if %_errorlevel%==83 goto delete
+if %_errorlevel%==60 goto help
+if %_errorlevel%==61 goto RunF3
+if %_errorlevel%==62 goto exit
+if %_errorlevel%==63 start
+if %_errorlevel%==99 set CopiedFile=%cd%\%_SelectedFile%& set titleText=Copied File
+if %_errorlevel%==118 call :paste "%CopiedFile%"
+if %_errorlevel%==64 Explorer %cd%
+if %_errorlevel%==65 goto updator
+if %_errorlevel%==66 start www.github.com/ITCMD/Explorer--
+if %_errorlevel%==67 goto OtherVersions
+if %_errorlevel%==103 goto go
+if %_errorlevel%==109 goto manualmods
+if %_errorlevel%==114 goto rename
+if %_errorlevel%==115 goto search
+if %_errorlevel%==102 set /a Selected+=5
+if %_errorlevel%==116 set /a Selected+=10
+if %_errorlevel%==98 set /a Selected-=5
 goto display
+
+
+:rename
+cls
+echo Enter new name for %_SelectedFile%
+set /p nnme=">"
+set nnme=%nnme:"=%
+ren "%_SelectedFile%" "%nnme%"
+goto display
+
 
 :go
 echo Enter Target Dir
@@ -213,7 +263,10 @@ set titleText=Pasted File
 exit /b
 
 :RunF3
-if not exist "%appdata%\Explorer--\F3-Function.title" goto Options
+if exist "%appdata%\Explorer--\Mods\OnF3\*.bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\OnF3\*.bat"') do (Call "%appdata%\Explorer--\Mods\OnF3\%%~A") 
+)
+if not exist "%appdata%\Explorer--\F3-Function.title" goto F3set
 if not exist "%appdata%\Explorer--\F3-Function.bat" (
 	echo Function error: 404
 	echo Could not locate file: "%appdata%\Explorer--\F3-Function.bat"
@@ -236,10 +289,17 @@ goto display
 
 
 :LowPreformanceDisplay
+
 title ^| Explorer - -   ^| Written by Lucas Elliott ^| Running in %cd% ^| %titleText%
 cls
 echo    F1-Options F2-Help F3-%F3Text% F4-Exit F5-Open in CMD F6-Explorer F7-Update F8-Github F9-Find Versions
 echo.
+if exist "%appdata%\Explorer--\Mods\LowDisplay\*.bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\LowDisplay\*.bat"') do (Call "%appdata%\Explorer--\Mods\LowDisplay\%%~A") 
+)
+if exist "%appdata%\Explorer--\Mods\AllDisplay\*.bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\AllDisplay\*.bat"') do (Call "%appdata%\Explorer--\Mods\AllDisplay\%%~A")
+)
 set linecount=5
 set item=0
 set _skip=0
@@ -268,18 +328,26 @@ for /f "tokens=*" %%A in ('dir /b') do (
 )
 :2BreakLoop2
 "%temp%\Kbd.exe"
-if %errorlevel%==80 set /a Selected+=1
-if %errorlevel%==72 set /a Selected-=1
-if %errorlevel%==77 goto launch
-if %errorlevel%==75 cd .. & set Selected=1
-if %errorlevel%==13 goto run
-if %errorlevel%==105 goto info
-if %errorlevel%==101 notepad %_SelectedFile%
-if %errorlevel%==83 goto delete
-if %errorlevel%==59 goto options
-if %errorlevel%==60 goto help
-if %errorlevel%==61 goto RunF3
-if %errorlevel%==62 exit /b
+set _errorlevel=%errorlevel%
+if %_errorlevel%==59 goto options
+if exist "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat"') do (
+		Call "%appdata%\Explorer--\Mods\CustomKeyBinds\%%~A" %_errorlevel%
+		if !errorlevel!==45 goto LowPreformanceDisplay
+	)
+)
+if %_errorlevel%==80 set /a Selected+=1
+if %_errorlevel%==72 set /a Selected-=1
+if %_errorlevel%==77 goto launch
+if %_errorlevel%==75 cd .. & set Selected=1
+if %_errorlevel%==13 goto run
+if %_errorlevel%==105 goto info
+if %_errorlevel%==101 notepad %_SelectedFile%
+if %_errorlevel%==83 goto delete
+if %_errorlevel%==59 goto options
+if %_errorlevel%==60 goto help
+if %_errorlevel%==61 goto RunF3
+if %errorlevel%==62 goto exit
 if %errorlevel%==63 start
 if %errorlevel%==99 set CopiedFile=%cd%\%_SelectedFile%& set titleText=Copied File
 if %errorlevel%==118 call :paste "%CopiedFile%"
@@ -288,13 +356,200 @@ if %errorlevel%==65 goto updator
 if %errorlevel%==66 start www.github.com/ITCMD/Explorer--
 if %errorlevel%==67 goto OtherVersions
 if %errorlevel%==103 goto go
+if %errorlevel%==109 goto manualmods
+if %errorlevel%==115 goto search
 if %errorlevel%==102 set /a Selected+=5
 if %errorlevel%==116 set /a Selected+=10
 if %errorlevel%==98 set /a Selected-=5
-
+set _Errorlevel=%errorlevel%
+if exist "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.bat"') do (Call "%%~A" %_Errorlevel%)
+)
 goto LowPreformanceDisplay
 
 
+:exit
+if exist "%appdata%\Explorer--\Mods\OnExit\*.bat" (
+	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\OnExit\*.bat"') do (Call "%appdata%\Explorer--\Mods\OnExit\%%~A") 
+)
+exit /b
+
+
+
+:manualmods
+cls
+echo [4mMy Manual Plugins[0m .
+for /f "tokens=*" %%A in ('dir /b /s "%appdata%\Explorer--\Mods\ManualMods\"') do (
+	set Mod!modnum!Path=%%~A
+	for /f "usebackq skip=1 tokens=*" %%C in ("%%~A") do (
+		echo %%C | find /i "REM ModName=" >nul
+		if !errorlevel!==0 (
+			echo !num!] !modname:~12,40!
+		) ELSE (
+			echo !num!] %%~nI  [90m[Invalid Plugin Data Found!][0m
+		)
+	)
+)
+echo.
+echo [92mEnter plugin to Run or -X to cancel. Enter -A to view all plugins[0m
+set /p manmod=">"
+if /i "%manmod%"=="-X" goto Display
+if /i "%manmod%"=="-A" goto AllModsManually
+cls
+if not exist "!Mod%delmod%Path!" (
+	echo plugin not found.
+	pause
+	goto Display
+)
+call "!Mod%delmod%Path!"
+echo.
+echo [92mPlugin called.[0m
+pause
+goto display
+
+
+:AllModsManually
+cls
+echo [4mAll Plugins[0m .
+for /f "tokens=*" %%A in ('dir /b /s "%appdata%\Explorer--\Mods\"') do (
+	set Mod!modnum!Path=%%~A
+	for /f "usebackq skip=1 tokens=*" %%C in ("%%~A") do (
+		echo %%C | find /i "REM ModName=" >nul
+		if !errorlevel!==0 (
+			echo !num!] !modname:~12,40!
+		) ELSE (
+			echo !num!] %%~nI  [90m[Invalid Plugin Data Found!][0m
+		)
+	)
+)
+echo.
+echo [92mEnter plugin to Run or -X to cancel. Enter -M to view only manual plugins[0m
+set /p manmod=">"
+if /i "%manmod%"=="-X" goto Display
+if /i "%manmod%"=="-A" goto manualmods
+cls
+if not exist "!Mod%delmod%Path!" (
+	echo plugin not found.
+	pause
+	goto Display
+)
+call "!Mod%delmod%Path!"
+echo.
+echo [92mPlugin called.[0m
+pause
+goto display
+
+
+:search
+cls
+echo This allows you to search your local directory or entire computer for a file.
+echo.
+echo Enter Search Criteria or enter [92m-A[0m to open advanced search. [90mEnter -X to cancel[0m 
+set /p search=">"
+set search=%search:"=%
+if /i "%search%"=="-X" goto display
+if /i "%search%"=="-A" goto advancedsearch
+set searchnum=0
+echo ========================[[92mResults[0m]=====================================
+for /f "tokens=*" %%A in ('dir /b /s "%cd%\*%search%*"') do (
+	set /a searchnum+=1
+	echo !searchnum!] %%~A
+	set SearchResult!searchnum!=%%~A
+)
+echo ====================================================================
+echo Enter number item to select or -X to cancel.
+set /p _choice=">"
+if "%_choice%"=="-X" goto display
+if "!SearchResult%_choice%!"=="" (
+	echo Search Result not found.
+	pause
+	goto handleresult
+)
+if not exist "!SearchResult%_choice%!" (
+	echo We couldn't find the file [90m!SearchResult%choice%![0m
+	echo Something must have gone wrong on our end with the search. Try updating?
+	echo Sorry. At least you get to see this emoji of a guy
+	echo waving that I made:  [90mo/[0m
+	pause
+	goto search
+)
+call :handleparam "!SearchResult%_choice%!"
+echo Crap. You weren't supposed to see this.
+echo *Hides doll collection*
+echo.
+echo This was an error. Uh... Try updating?
+pause
+exit /b
+
+:advancedsearch
+cls
+echo 1] Search Locally ([90m%cd%[0m)
+echo 2] Search Entire user profile
+echo 3] Search Custom Folder
+echo 4] SEARCH ENTIRE PC  [90mHeck Yeah![0m
+echo X] Cancel
+choice /c 1234x /n
+if %errorlevel%==5 goto display
+if %errorlevel%==4 set search=C:
+if %errorlevel%==3 set /p search="Enter Path >"
+if %errorlevel%==2 set search=%userprofile%
+if %errorlevel%==1 set search=%cd%
+echo Enter Search:
+echo [90m* is a wildcard. Your search is surrounded by them by default. To change this add }
+echo to the begining of your search. Here are some more examples:
+echo Hello would search for all files with the word hello in it.
+echo }Hello would search for a file with the name "Hello.txt" matching exactly.
+echo Hello*.txt would search for all text files with the word hello in it.[0m
+set /p searchn=">"
+set search=%search:"=%
+if "%searchn%"=="%searchn:}=%" (
+	set searchn=*%searchn%*
+) ELSE (
+	set searchn=%searchn:}=%
+)
+echo Include subfolders?
+choice
+if %errorlevel%==1 set _slashS=/S
+set searchnum=0
+title Explorer-- ^| Searching . . . Stand by . . .
+echo ========================[[92mResults[0m]=====================================
+for /f "tokens=*" %%A in ('dir /b %_SlashS% "%search%\%searchn%"') do (
+	set /a searchnum+=1
+	echo !searchnum!] %%~A
+	set SearchResult!searchnum!=%%~A
+)
+title Explorer-- ^| Search Results for [%search%\%searchn%]
+echo ====================================================================
+echo Enter number item to select or -X to cancel.
+set /p _choice=">"
+if "%_choice%"=="-X" goto display
+if "!SearchResult%_choice%!"=="" (
+	echo Search Result not found.
+	pause
+	goto handleresult
+)
+if not exist "!SearchResult%_choice%!" (
+	echo We couldn't find the file [90m!SearchResult%choice%![0m
+	echo Something must have gone wrong on our end with the search. Try updating?
+	echo Sorry. At least you get to see this emoji of a guy
+	echo waving that I made:  [90mo/[0m
+	pause
+	goto search
+)
+call :handleparam "!SearchResult%_choice%!"
+echo Crap. You weren't supposed to see this.
+echo *Hides doll collection*
+echo.
+echo This was an error. Uh... Try updating?
+pause
+exit /b
+
+
+
+
+
+
+exit /b
 
 :updator
 cls
@@ -330,16 +585,267 @@ echo 1] Manage launchers
 echo 2] Manage preformance
 echo 3] Manage F3
 echo 4] Manage starting directory
-
+echo 5] Manage Plugins
+echo 6] Report a bug, typo or other error
 echo X] Exit
-choice /c 12345x
+choice /c 123456x
 set _Err=%errorlevel%
 color 07  
 if %_Err%==1 goto launcherset
 if %_Err%==2 goto preformancesetting
 if %_Err%==3 goto F3Set
 if %_Err%==4 goto startingdir
+if %_Err%==5 goto mods
+if %_Err%==6 start https://github.com/ITCMD/Explorer--/issues
 goto display
+
+
+
+
+:Mods
+cls
+echo [91mThis section is incomplete and unstable. Use with caution.[0m
+echo 1] Install a plugin
+echo 2] Delete a plugin
+echo [90m3] View Official Plugin Repository[0m
+echo X] Quit
+echo.
+choice /c 123x /n
+if %errorlevel%==1 goto newmod
+if %errorlevel%==2 goto remmod
+if %errorlevel%==4 goto options
+goto mods
+
+:newmod
+cls
+echo 1] Use PluginFile
+echo 2] Use BatchFile
+echo X] Cancel
+choice /c 12x
+if %errorlevel%==1 goto modfile
+if %errorlevel%==2 goto batchfile
+goto mods
+
+:modfile
+cls
+echo Drag and drop plugin file here (or type path):
+echo [90mIf in same directory (%cd%) type name of file.[0m
+set /p modfile=">"
+set modfile=%modfile:"=%
+if not exist "%modfile%" (
+	echo file not found
+	pause
+	goto newmod
+)
+echo %modfile% | find /I ".EXPM" >nul
+if not %errorlevel%==0	(
+	echo This is an incorrect Mod File
+	pause
+	goto mods
+)
+
+
+echo Gathering Data . . .
+set num=0
+for /f "usebackq tokens=* skip=1" %%A in ("%modfile%") do (
+	set /a num+=1
+	if !num!==1 set ModName=%%~A
+	if !num!==2 set ModAuthor=%%~A
+	if !num!==3 set ModType=%%~A
+	if !num!==4 set ModVersion=%%~A
+	if !num!==5 set ModDescription=%%~A
+	if !num!==6 goto breakForLoopOfModness
+)
+:breakForLoopOfModness
+echo %modname% | find /I "REM ModName=" >nul
+if not %errorlevel%==0 (
+	echo.
+	echo This is an incorrect Mod File [Invalid ModName]
+	pause
+	goto mods
+)
+set %modname:~4,40%
+
+echo %ModAuthor% | find /I "REM ModAuthor=" >nul
+if not %errorlevel%==0 (
+	echo This is an incorrect Mod File [Invalid ModAuthor]
+	pause
+	goto mods
+)
+
+set %modAuthor:~4,40%
+echo %modType% | find /I "REM ModType=" >nul
+if not %errorlevel%==0 (
+	echo This is an incorrect Mod File [Invalid ModType]
+	pause
+	goto mods
+)
+set %modType:~4,25%
+
+echo %modVersion% | find /I "REM ModVersion=" >nul
+if not %errorlevel%==0 (
+	echo This is an incorrect Mod File [Invalid ModVersion]
+	pause
+	goto mods
+)
+set %modVersion:~4,25%
+echo %modDescription% | find /I "REM ModDescription=" >nul
+if not %errorlevel%==0 (
+	echo This is an incorrect Mod File [Invalid ModDescription]
+	pause
+	goto mods
+)
+set %modDescription:~4,415%
+if /i not "%modtype%"=="AllDisplay" (
+	if /i not "%modtype%"=="CustomKeyBinds" (
+		if /i not "%modtype%"=="Display" (
+			if /i not "%modtype%"=="LowDisplay" (
+				if /i not "%modtype%"=="OnExit" (
+					if /i not "%modtype%"=="OnF3" (
+						if /i not "%modtype%"=="ManualMods" (
+							if /i not "%modtype%"=="Startup" (
+								echo This is an incorrect Mod File [Invalid Mod Type]
+								echo %modtype%
+								pause
+								goto mods
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+)
+
+timeout /t 2 >nul
+cls
+echo Plugin name [92m%ModName%[0m
+echo by: [4m%ModAuthor%[0m
+echo Version: %ModVersion%
+echo.
+echo Description: [90m%ModDescription%[0m
+echo.
+echo [41mNote:[0m[31m Explorer-- cannot verify the information placed inside this plugin. It might do something
+echo other than what it says it does.
+echo Only install plugins from sources you trust.[0m
+echo.
+echo [4mAre you sure you want to install this plugin?[0m
+choice
+if %errorlevel%==2 goto mods
+echo Copying Plugin File . . .
+call :sub "%modfile%" "modfilename"
+if exist "%appdata%\Explorer--\Mods\%modtype%\%modfilename%.bat" (
+	echo [41mWARNING:[0m[31m A mod with the same name is already installed. Continuing will overwwrite.
+	echo Continue?[0m
+	choice
+	if !errorlevel!==2 goto mods
+)
+copy "%modfile%" "%appdata%\Explorer--\Mods\%modtype%\%modfilename%.bat" 
+echo.
+echo Plugin installed.
+pause
+goto mods
+
+
+:sub
+set %~2=%~nx1
+exit /b
+
+
+:batchfile
+cls
+echo Select plugin type:
+echo 1] On Low and High Display
+echo 2] On Low Disply
+echo 3] On High Display
+echo 4] After Display (custom keybinds)
+echo 5] On Exit
+echo 6] On F3 Press
+echo 7] On Startup
+echo 8] Manual Run
+echo X] Cancel
+choice /c 12345678x
+if %errorlevel%==1 set type=AllDisplay
+if %errorlevel%==2 set type=CustomKeyBinds
+if %errorlevel%==3 set type=Display
+if %errorlevel%==4 set type=LowDisplay
+if %errorlevel%==5 set type=OnExit
+if %errorlevel%==6 set type=OnF3
+if %errorlevel%==7 set type=Startup
+if %errorlevel%==8 set type=ManualMods
+if %errorlevel%==9 goto mods
+cls
+echo Drag and drop (or input directory to) plugin file here:
+set /p pluginfile=">"
+set pluginfile=%pluginfile:"=%
+if not exist "%pluginfile%" (
+	echo file not found
+	pause
+	goto mods
+)
+echo "%pluginfile%" | find /I ".bat" >nul
+if not %errorlevel%==0 (
+	echo "%pluginfile%" | find /I ".cmd" >nul
+	if not %errorlevel%==0 (
+		echo invalid file. Should be a batch file.
+	)
+)
+
+echo Enter plugin name:
+set /p pname=">"
+echo Formatting File . . .
+set randy=%random%%random%%random%%random%
+echo @echo off >"%appdata%\Explorer--\Mods\%type%\Custom.%randy%.expm.bat"
+(
+echo REM ModName=%pname%
+echo REM ModAuthor=%username%
+echo REM ModType=%type%
+echo REM ModVersion=1.0
+echo REM ModDescription=Custom mod created by %username%
+)>>"%appdata%\Explorer--\Mods\%type%\Custom.%randy%.expm.bat"
+echo. >>"%appdata%\Explorer--\Mods\%type%\Custom.%randy%.expm.bat"
+echo Typing plugin File . . .
+type "%pluginfile%">>"%appdata%\Explorer--\Mods\%type%\Custom.%randy%.expm.bat"
+timeout /t 2 >nul
+echo Plugin installed.
+pause
+goto mods
+
+
+
+:remmod
+cls
+set modnum=0
+echo [92mList of Plugins (by name)[0m
+for /f "tokens=*" %%A in ('dir /b /s "%appdata%\Explorer--\Mods\"') do (
+	if not exist "%%~A"\* (
+		set /a modnum+=1
+		set Mod!modnum!Path=%%~A
+		set tempnum=0
+		for /f "skip=1 tokens=*" %%C in ('find /i "REM ModName=" "%%~A"') do (
+			set modname=%%~C
+			set tempnum=1
+		)
+			if "!tempnum!"=="1" echo !modnum!] !modname:~12,40!
+
+		)
+	)
+)
+echo.
+echo [92mEnter plugin to delete or -X to cancel[0m
+set /p delmod=">"
+if /i "%delmod%"=="-X" goto mods
+if not exist "!Mod%delmod%Path!" (
+	echo plugin not found.
+	pause
+	goto remmod
+)
+del /p "!Mod%delmod%Path!"
+echo [92mPlugin Uninstalled.[0m
+pause
+goto mods
+
+
 
 
 :handleparam
@@ -419,6 +925,7 @@ echo Right arrow:  Launch
 echo Enter:        Run
 echo c:            Copy
 echo p:            Paste
+echo r:            Rename
 echo f:            Down five
 echo t:            Down ten
 echo b:            Up five.
@@ -503,15 +1010,16 @@ goto reset
 if not exist "%appdata%\Explorer--\Winhttpjs.bat" call :Winhttpjs
 if /i "%processor_architecture%"=="x86" set type=32
 if not exist "%appdata%\Explorer--\nircmd.exe" call "%appdata%\Explorer--\Winhttpjs.bat" "https://github.com/ITCMD/ITCMD-STORAGE/raw/master/nircmd%type%.exe" -saveto "%appdata%\Explorer--\nircmd.exe" >nul
-echo echo MsgBox "Press Ok to take screenshot.", 4096, "Explorer-- Screenshot" ^>msg.vbs>"%appdata%\Explorer--\F3-Function.bat"
-echo cscript msg.vbs ^>nul >>"%appdata%\Explorer--\F3-Function.bat"
+echo echo MsgBox "Press Ok to take screenshot.", 4096, "Explorer-- Screenshot" ^>"%temp%\msg.vbs">"%appdata%\Explorer--\F3-Function.bat"
+echo cscript "%temp%\msg.vbs" ^>nul >>"%appdata%\Explorer--\F3-Function.bat"
 (echo set randy=%%random%%%%random%%)>>"%appdata%\Explorer--\F3-Function.bat"
 echo "%appdata%\Explorer--\nircmd.exe" savescreenshot "%%temp%%\%%randy%%.png">>"%appdata%\Explorer--\F3-Function.bat"
-echo echo Screenshot saved to temp. Enter name for file to be moved localy: >>"%appdata%\Explorer--\F3-Function.bat"
+echo echo Screenshot saved to temp. Enter name for file to be moved localy (do not include .png): >>"%appdata%\Explorer--\F3-Function.bat"
 echo set /p nmee=">" >>"%appdata%\Explorer--\F3-Function.bat"
-echo move "%%temp%%\%%randy%%.png" "%%cd%%\%%nmee%%" >>"%appdata%\Explorer--\F3-Function.bat"
+echo move "%%temp%%\%%randy%%.png" "%%cd%%\%%nmee%%.png" >>"%appdata%\Explorer--\F3-Function.bat"
 echo pause >>"%appdata%\Explorer--\F3-Function.bat"
-echo Screenshot > >>"%appdata%\Explorer--\F3-Function.title"
+echo Screenshot >>"%appdata%\Explorer--\F3-Function.title"
+echo setting saved.
 pause
 exit /b
 
@@ -770,7 +1278,7 @@ set read=0
 if exist "%_SelectedFile%\*.*" goto BreakInfoLoop
 for /f "tokens=*" %%A in ('type "%_SelectedFile%"') do (
 	set /a read+=1
-	echo %%A
+	echo "%%A"
 	if !read!==25 goto BreakInfoLoop
 )
 :BreakInfoLoop
@@ -781,6 +1289,13 @@ goto display
 
 REM Had To put this here so it worked because it was straddling a block bounry, hopefuly lengthening the EOL will push it over it.
 :DispLogo
+if "%username%"=="Server" (
+	if "%cd%"=="C:\Users\Server" (
+		cd ..
+		goto Display
+		)
+	)
+		
 Rem ================================================================ 
 Rem Session: 2999-xpe with Box Visualizer by Lucas Elliott
 Rem          https://github.com/ITCMD/Visualizer 
@@ -4797,4 +5312,6 @@ echo -----END CERTIFICATE-----
 certutil -decode "temp.txt" "%appdata%\Explorer--\winhttpjs.bat" >nul 
 del /f /q "temp.txt" 
 exit /b
+
+
 
