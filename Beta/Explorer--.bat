@@ -362,9 +362,6 @@ if %errorlevel%==102 set /a Selected+=5
 if %errorlevel%==116 set /a Selected+=10
 if %errorlevel%==98 set /a Selected-=5
 set _Errorlevel=%errorlevel%
-if exist "%appdata%\Explorer--\Mods\CustomKeyBinds\*.Bat" (
-	for /f %%A in ('dir /b "%appdata%\Explorer--\Mods\CustomKeyBinds\*.bat"') do (Call "%%~A" %_Errorlevel%)
-)
 goto LowPreformanceDisplay
 
 
@@ -933,6 +930,7 @@ echo i:            File or folder info.
 echo Delete:       Delete file
 echo e:            Edit file (notepad)
 echo g:            (go) prompts for dir to cd to.
+echo s:            Open Search Tools
 echo.
 echo.
 echo More coming soon.
@@ -1263,6 +1261,7 @@ call :Setinfo "%_SelectedFile%"
 echo File: [97m[4m%FileName%[0m
 call :SetSize "%_SelectedFile%" size
 call :SetModDate "%_SelectedFile%" MDate
+set _FileExte=%FileExte%
 set FileExte=          %FileExte%
 if exist "%_SelectedFile%\*.*" set FileExte=          Folder
 set size=                    %size%
@@ -1274,6 +1273,22 @@ echo Modification Date:       %MDate:~-20%
 echo.
 echo.
 echo [92mPreview:[0m
+if /i not "%_FileExte%"==".bat" (
+	if /i not "%_FileExte%"==".txt" (
+		if /i not "%_FileExte%"==".reg" (
+			if /i not "%_FileExte%"==".cmd" (
+				if /i not "%_FileExte%"==".vbs" (
+					if /i not "%_FileExte%"==".ini" (
+						if /i not "_%FileExte%"==".log" (
+							echo No Preview Available.
+							goto BreakInfoLoop
+						)
+					)
+				)
+			)
+		)
+	)
+)
 set read=0
 if exist "%_SelectedFile%\*.*" goto BreakInfoLoop
 for /f "tokens=*" %%A in ('type "%_SelectedFile%"') do (

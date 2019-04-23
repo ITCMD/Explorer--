@@ -11,3 +11,4 @@
  - There are more and more every day
  - Made the info page not run random stuff from the file it's viewing. LOL.
  - Added some secret emojicons into the script somewhere.
+ - Fixed the info dialogue to not display evil characters that will break it.
