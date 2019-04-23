@@ -11,5 +11,8 @@ add their own awesome creations to the tool!
 ![image](https://i.imgur.com/oYvHR7u.gif)
 ##### ***F1 Options Menu***
 ![image](https://i.imgur.com/L5vfBnL.gif)
+##### ***Low Preformance Display*** (For slower PCs or SSH connections)
+![image](https://i.imgur.com/852qFpo.gif)
+
 
 Tool is soon to be featured on TheBATeam!
