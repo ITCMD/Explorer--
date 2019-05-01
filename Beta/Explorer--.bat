@@ -29,7 +29,6 @@ type changelog
 echo.
 pause
 goto reset
-
 :backRecycle
 setlocal EnableDelayedExpansion
 if exist "%temp%\kbd.exe" goto 19647917981052654768086 
