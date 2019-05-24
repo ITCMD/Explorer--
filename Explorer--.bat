@@ -2,7 +2,7 @@
 if "%~1"=="updated" goto cleanupdate
 if "%~1"=="update" goto updator
 :reset
-set Vers=1.9
+set Vers=2.0
 cls
 echo (C) 2019 Created by Lucas Elliott with ITCMD
 echo           [90mRunning Version %vers%[0m
@@ -29,7 +29,6 @@ type changelog
 echo.
 pause
 goto reset
-
 :backRecycle
 setlocal EnableDelayedExpansion
 if exist "%temp%\kbd.exe" goto 19647917981052654768086 
@@ -550,6 +549,13 @@ exit /b
 
 :updator
 cls
+ping github.com -n 1 >nul
+if not %errorlevel%==0 (
+	echo Could not connect to github.com.
+	echo Are you connected to the internet?
+	pause
+	goto display
+)
 echo checking for updates . . .
 bitsadmin /transfer updateexplorer /download /priority high https://github.com/ITCMD/Explorer--/raw/master/Update.version "%temp%\Version" >nul
 find "[%vers%]" "%temp%\Version" >nul
@@ -604,12 +610,13 @@ cls
 echo [91mThis section is incomplete and unstable. Use with caution.[0m
 echo 1] Install a plugin
 echo 2] Delete a plugin
-echo [90m3] View Official Plugin Repository[0m
+echo 3] View Official Plugin Repository
 echo X] Quit
 echo.
 choice /c 123x /n
 if %errorlevel%==1 goto newmod
 if %errorlevel%==2 goto remmod
+if %errorlevel%==3 start https://github.com/ITCMD/Explorer--/blob/master/Officiall%%20Plugins/README.md#-------------------------plugins-------------------------
 if %errorlevel%==4 goto options
 goto mods
 
@@ -900,15 +907,94 @@ echo [4mHelp Menu[0m
 echo.
 echo 1] Keyboard Functions (on main display)
 echo 2] Options and settings
-echo 3] Plugins (coming soon)
+echo 3] Plugins
+echo 4] Other helpful tips
 echo X] Exit
-choice /c 123x
-if %errorlevel%==1 goto KhelpK
-if %errorlevel%==2 goto OhelpO
-if %errorlevel%==3 goto help
+choice /c 1234x
+if %errorlevel%==1 goto :KhelpK
+if %errorlevel%==2 goto :OhelpO
+if %errorlevel%==3 goto :pluginhelp
+if %errorlevel%==4 goto :otherhelp
 color 07
 goto display
 
+:otherhelp
+cls
+echo Here are some tips:
+echo.
+echo.
+echo - When something doesn't work properly or as expected, check the title of the window. 
+echo   this is where some helpful error messages are shown.
+echo   Note: An SSH Mode is coming soon in which it will display the message internally.
+echo.
+echo - You should check for updates every week or so. The program does not automatically
+echo   heck for updates.
+echo.
+echo - If you have any issues, please check out the github repository and report it! This
+echo   is the best way to get our attention on it!
+echo.
+echo Press any key to exit . . .
+pause >nul
+goto help
+
+
+
+:pluginhelp
+cls
+echo Plugins allow you to customize Explorer-- without modifying it's source code.
+echo Plugins can be written and shared by anyone, and it is easy to create one for yourself.
+echo.
+echo 1] General Users
+echo 2] Developers (Plugin Making)
+echo X] Quit
+choice /c 12x
+if %errorlevel%==1 (
+	cls
+	echo As a general user, installing a plugin is fairly straight forward. You can
+	echo Install plugins that are .bat files, which requires you to enter in information,
+	echo Or you can use .expm files, which are special .bat files with the special information
+	echo explorer-- needs already stored inside of it.
+	echo.
+	echo to find great plugins check out the official repository!
+	pause
+	goto help
+)
+if %errorlevel%==2 (
+	cls
+	echo Plugin files are written in batch [windows CMD shell].
+	echo As a developer, there are multiple types of plugins. They are:
+	echo 1. LowDisplay:     These run each time the Low-Preformance Display is refreshed.
+	echo 2. Display:        These run each time the High-Preformance Display is refreshed.
+	echo 3. AllDisplay:     These run each time any display is refreshed.
+	echo 4. CustomKeybinds: These allow you to add or replace keybinds on the High-Preformance display. [90m*a[0m
+	echo 5. ManualMods:         These must be triggered by the user in the mods menu [M]
+	echo 6. Startup:        These run on the start of Explorer--
+	echo 7. OnF3:           These run when a user presses F3, before the regular F3 Function.
+	echo 8: OnExit:         Runs before Explorer-- quits [90m*b[0m
+	echo.
+	echo.
+	echo *a - In the batch file, one can check the KDB.exe errorlevel with %%_errorlevel%%.
+	echo A list of errorlevels will be on the github repository soon.
+	echo *b - OnExit Plugins only run when the user closes with F4.
+	echo.
+	echo.
+	echo For .expm files the beginning will look like this:
+	echo.
+	echo [93m@echo off 
+	echo REM ModName=The Plugin Name
+	echo REM ModAuthor=Your name
+	echo REM ModType=OnF3 (or whatever option you choose)
+	echo REM ModVersion=2.5
+	echo REM ModDescription=A description of what your plugin does.
+	echo commands go here on[0m
+	echo.
+	echo Users can also install .bat files as plugins, but then the user will decide when the mod is run,
+	echo and there is no author, version, or name data.
+	echo.
+	pause
+	goto help
+)
+if %errorlevel%==3 goto help
 
 :KhelpK
 cls
@@ -1109,7 +1195,7 @@ cls
 echo [4mSearch for other versions of %_SelectedFile%.[0m
 echo Where would you like to search?
 echo.
-echo 1] Entire Computer
+echo 1] Entire Computer (C Drive Only)
 echo 2] Local User Directory (Including Appdata and temp)
 echo 3] Current Folder and Subfolders
 echo 4] Somewhere else
