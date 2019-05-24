@@ -6,6 +6,6 @@ Once downloaded you can install it from the options menu in Explorer-- `(F1 -> 5
 
 # ------------------------ Plugins ------------------------
 
-### [Example](example.expm):          An example plugin to test.
+### [Example](Example.expm):          An example plugin to test.
 
 ### [Nano Editor](NanoEditor.expm):   Replace the edit command with nano.
