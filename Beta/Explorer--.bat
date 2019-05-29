@@ -560,7 +560,8 @@ if not %errorlevel%==0 (
 )
 echo checking for updates . . .
 if "%vers%"=="B.8.ta" (
-	call :messageBox 25 25 12 15 7 16 "Cannot Check for Updates" "You cannot check for updates when using the beta." "Please download the official release from the" "github repository to continue."
+	call :messageBox 30 8 12 15 7 16 "Cannot Check for Updates" "You cannot check for updates when using the beta." "Please download the official release from the" "github repository to continue."
+	echo [0m 
 	pause
 	goto display
 )
@@ -5422,33 +5423,23 @@ del /f /q "temp.txt"
 exit /b
 
 :messageBox
-	setlocal
-		for %%# in (%*) do (
-			set /a "args+=1"
-			if !args! lss 7 ( set /a "arg[!args!]=%%~#" ) else set "arg[!args!]=%%~#"
-		)
-		
-		set "box=%esc%[%arg[2]%;%arg[1]%H"
-		
-		for /l %%a in (7,1,%args%) do (
-			set "s=!arg[%%a]!#" & set "len=0"
-			for %%P in (8192 4096 2048 1024 512 256 128 64 32 16 8 4 2 1) do ( if "!s:~%%P,1!" NEQ "" ( set /a "len+=%%P" & set "s=!s:~%%P!" ) )
-			set "len[%%a]=!len!"
-			if not defined longest (
-				set /a "longest=!len[%%a]!"
-			) else if !len[%%a]! gtr !longest! set /a "longest=len[%%a]"
-		)
-		
-		set /a "lng=longest + 2"
+    setlocal
+        for %%# in (%*) do ( set /a "args+=1"
+            if !args! lss 7 ( set /a "arg[!args!]=%%~#" ) else (
+                set "arg[!args!]=%%~#"
+                for %%e in (!args!) do ( set "s=!arg[%%e]!#" & set "len=0"
+                    ( for %%P in (8192 4096 2048 1024 512 256 128 64 32 16 8 4 2 1) do ( if "!s:~%%P,1!" NEQ "" ( set /a "len+=%%P" & set "s=!s:~%%P!" ))) & set /a "len[%%e]=len"
+                    if !len[%%e]! gtr !longest! set /a "longest=len[%%e]"
+        )))
+        
+        set /a "a2=longest + 2"
+        set "NL=%esc%[%a2%D%esc%[B"
+        for /l %%b in (%len[7]%,1,%longest%) do set "bar=!bar! "
+        set "box=%esc%[%arg[2]%;%arg[1]%H%esc%[48;5;%arg[3]%m%esc%[38;5;%arg[4]%m %arg[7]%!bar!%NL%"
 
-		for /l %%b in (!len[7]!,1,%longest%) do set "bar7=!bar7!Û"
-		set "box=!box!%esc%[48;5;%arg[3]%m%esc%[38;5;%arg[4]%m %arg[7]%%esc%[38;5;%arg[3]%m!bar7!%esc%[!lng!D%esc%[B"
-			
-		for /l %%a in (8,1,%args%) do (
-			set "bar=" & for /l %%b in (!len[%%a]!,1,%longest%) do set "bar=!bar!Û"
-			set "box=!box!%esc%[48;5;%arg[5]%m%esc%[38;5;%arg[6]%m !arg[%%a]!%esc%[38;5;%arg[5]%m!bar!%esc%[!lng!D%esc%[B"
-		)
-	(endlocal
-		echo %box%
-	)
+        for /l %%a in (8,1,%args%) do ( set "bar="
+            for /l %%b in (!len[%%a]!,1,%longest%) do set "bar=!bar! "
+            set "box=!box!%esc%[48;5;%arg[5]%m%esc%[38;5;%arg[6]%m !arg[%%a]!!bar!%NL%"
+        )
+    (endlocal & echo %box%)
 goto :eof
