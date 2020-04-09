@@ -92,7 +92,7 @@ goto :end19647917981052654768086
 @endlocal 
 @goto :eof
 :end19647917981052654768086 
-
+if exist "%appdata%\Explorer--\Drive.ini" for /f "usebackq" %%A in ("%appdata%\Explorer--\Drive.ini") do (%%~A)
 set StartDirectory=%userprofile%
 if "%username%"=="Server" set StartDirectory=C:\Users\Server\Desktop
 if exist "%appdata%\Explorer--\StartDirectory.bat" call "%appdata%\Explorer--\StartDirectory.bat"
@@ -598,10 +598,12 @@ echo 3] Manage F3
 echo 4] Manage starting directory
 echo 5] Manage Plugins
 echo 6] Report a bug, typo or other error
+echo 7] Manage Drive LEtter
 echo X] Exit
-choice /c 123456x
+choice /c 1234567x
 set _Err=%errorlevel%
 color 07  
+if %_Err%==7 goto drive
 if %_Err%==1 goto launcherset
 if %_Err%==2 goto preformancesetting
 if %_Err%==3 goto F3Set
@@ -610,6 +612,13 @@ if %_Err%==5 goto mods
 if %_Err%==6 start https://github.com/ITCMD/Explorer--/issues
 goto display
 
+:drive
+cls
+echo Enter new drive letter:
+set /p Drive=">"
+%Drive%:
+echo %Drive%>"%appdata%\Explorer--\Drive.ini"
+goto options
 
 
 
