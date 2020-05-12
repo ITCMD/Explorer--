@@ -1,18 +1,4 @@
-1] Added Plugin Support!
- - Wohoo Plugin support is here!
- - Developers can add their own scripts to different sections of the explorer.
- - A plugin creation guide and use guide is in the help section.
- - There are a couple of official plugins you can see in the repository,
- - To view the repository, press F8 on the main menu, or access it from the Plugin menu.
-2] Added search tool
- - Press S to search local directory,
- - Enter -A to view advanced search.
-3] Added Beta Support
- - Users can now download and test the beta from the github repo.
-4] Fixed a lot of bugs
- - There are more and more every day
- - Made the info page not run random commands from the file it's viewing. LOL.
- - Added some secret emojicons into the script somewhere.
- - Fixed the info dialogue to not display evil characters that will break it.
-5] Removed Herobrine
+1] Added temp support
+- Creates temporary files in %temp% now to allow explorere-- to run in system32
+2] Removed Herobrine
 
