@@ -2,7 +2,7 @@
 if "%~1"=="updated" goto cleanupdate
 if "%~1"=="update" goto updator
 :reset
-set Vers=2.0
+set Vers=2.1
 cls
 echo (C) 2019 Created by Lucas Elliott with ITCMD
 echo           [90mRunning Version %vers%[0m
@@ -1444,9 +1444,9 @@ FOR /f "tokens=1,2,3* delims= " %%a in ('dir ^|%windir%\system32\find.exe /i "%~
 )
 set _ForString=%~1
 set _ForString=!_ForString:\=\\!
-wmic datafile where name="!_ForString!" get LastModified /format:list>out.temp
-For /f "tokens=2 delims==" %%a in ('type out.temp ^| find "="') do (set %~2=%%a)
-rem del /f /q out.temp
+wmic datafile where name="!_ForString!" get LastModified /format:list >"%temp%\out.temp"
+For /f "tokens=2 delims==" %%a in ('type "%temp%\out.temp" ^| find "="') do (set %~2=%%a)
+rem del /f /q "%temp%\out.temp"
 Rem set %~2=!MDate:~6,4!.!MDate:~0,2!.!MDate:~3,2!.!AMPM!.!MTime:~0,2!.!MTime:~3,2!
 set %~3=!MDate!  !MTime!
 exit /b
